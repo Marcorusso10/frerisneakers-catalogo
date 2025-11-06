@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreriSneackers</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #FFFFFF; /* Sfondo Bianco */
+        }
+        /* Titolo principale FreriSneackers (nero scuro) */
+        h1 { color: #333;
+          font-family: Georgia, 'Times New Roman', Times, serif; } 
+        hr { border: 0; border-top: 1px solid #ccc; margin: 20px 0; }
+        
+        /* Paragrafi nella BODY (Home Page) */
+        body p { 
+            color: #333; 
+        }
+
+        .descrizione-intro {
+            font-family: Georgia, 'Times New Roman', Times, serif; 
+            font-size: 1.5em;
+            line-height: 1.6;
+            color: #444;
+            text-align: justify;
+            margin-bottom: 25px;
+        }
+
+        /* Stile Generale delle Schede */
+        .catalogo-griglia {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: flex-start;
+            padding: 0;
+            list-style: none;
+        }
+        
+        
+        .scheda-prodotto {
+            width: calc(33.33% - 20px);
+            background-color: #ddd; /* Verde Salvia */
+            border: 1px solid #ddd;
+            padding: 10px;
+            box-sizing: border-box;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+            border-radius: 8px; /* Arrotondamento per un look moderno */
+        }
+        .scheda-prodotto:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Ombra più pronunciata */
+        }
+        .scheda-prodotto img {
+            max-width: 90%;
+            height: auto;
+            border-radius: 4px;
+        }
+        /* TITOLO SCARPA NELLE SCHEDE: NERO */
+        .scheda-prodotto h3 {
+            margin: 10px 0 5px; 
+            color: #000000; 
+        } 
+        
+        /* Testo descrittivo nelle schede */
+        .scheda-prodotto p { 
+            text-align: center;
+            color: #333; 
+            margin: 5px 0;
+        }
+        
+        /* DETTAGLIO PRODOTTO (Galleria e Contatti) */
+        #dettaglio-view {
+            background-color: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        /* Stile del Logo */
+        .logo-container {
+            text-align: center; 
+            margin-bottom: 20px; 
+        }
+        .logo-container img {
+            max-width: 150px; 
+            height: auto;
+        }
+
+        .dettaglio-flex {
+            display: flex;
+            gap: 40px;
+        }
+        .galleria-container {
+            width: 50%;
+            position: relative;
+        }
+        .galleria-item {
+            display: none; 
+            text-align: center;
+        }
+        .galleria-item.active {
+            display: block; 
+        }
+        .galleria-item img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        
+        /* Stile delle Frecce */
+        .freccia {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 1.5em;
+            z-index: 10;
+            border-radius: 50%;
+        }
+        .freccia-prev { left: 5px; }
+        .freccia-next { right: 5px; }
+
+        /* Stile dei Pulsanti Contatto */
+        .pulsanti a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            line-height: 1.5;
+            transition: background-color 0.2s;
+        }
+        .pulsanti .btn-vinted { background-color: #228B22; }
+        .pulsanti a:hover {
+            opacity: 0.8;
+        }
+
+        /* Media Query per layout responsive */
+        @media (max-width: 768px) {
+            .scheda-prodotto {
+                width: calc(50% - 20px); /* Due colonne su schermi più piccoli */
+            }
+            .dettaglio-flex {
+                flex-direction: column; /* Impila su schermi mobili */
+            }
+            .galleria-container, .descrizione-contatti {
+                width: 100% !important;
+            }
+        }
+        @media (max-width: 480px) {
+             .scheda-prodotto {
+                width: 100%; /* Una sola colonna sui telefoni */
+            }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div id="contenuto-principale">
+    </div>
+
+    <script>
+        // DATI DEI PRODOTTI 
+        const prodotti = [
+            {
+                id: 'Nike Air Force 1 Canvas',
+                nome: '🍃 Nike Air Force 1 Low Canvas 🍃',
+                descBreve: 'La AF1 perfetta per un look fresco e primaverile!',
+                descCompleta: `
+                Un'edizione speciale della leggendaria Air Force 1 con tomaia interamente in tela, 
+                che la rende incredibilmente leggera e traspirante. 
+                Il colore "Dusty Olive/Olive Aura" è una splendida tonalità di verde oliva pastello, 
+                perfetta per distinguersi con eleganza.
+                <br><br>
+                <ul>
+                    <li>Taglia EU: 38.5</li>
+                    <li>Condizioni: Nuove, mai indossate</li>
+                </ul>
+                <hr>
+                
+                <h3>🛍️ COME ACQUISTARE (SOLO SU VINTED) 🛍️</h3>
+                <p>Per visualizzare tutti i dettagli, le foto aggiuntive e completare l'acquisto in modo sicuro:</p>
+                <p><strong>⬇️ Clicca sul pulsante qui sotto e visita la nostra pagina ufficiale di Vinted! ⬇️</strong></p>
+                `,
+                contatti: {
+                    vintedUser: 'freri_sneakers_01'
+                },
+                foto: [
+                    'immagini/images.jpeg', // Foto 1 (Principale)
+                    'immagini/images2.jpeg', // Foto 2
+                    'immagini/images3.jpeg',  // Foto 3
+                    'immagini/images4.jpeg',//Foto 4
+                ]
+            },
+            {
+                id: 'Nike Mercurial Rosso Fuoco',
+                nome: '​⚽ Nike Phantom GT2 Academy TF ⚽',
+                descBreve: 'Sei pronto a lasciare gli avversari sul posto? ',
+                descCompleta: `Queste Nike Mercurial sono il biglietto per la massima velocità e uno stile inconfondibile!
+                               Perfette per chi ama la velocità.
+                <br><br>
+                <ul>
+                    <li>Taglia EU: 39</li>
+                    <li>Condizioni: Nuove, mai indossate</li>
+                </ul>
+                <hr>
+                
+                <h3>🛍️ COME ACQUISTARE (SOLO SU VINTED) 🛍️</h3>
+                <p>Per visualizzare tutti i dettagli, le foto aggiuntive e completare l'acquisto in modo sicuro:</p>
+                <p><strong>⬇️ Clicca sul pulsante qui sotto e visita la nostra pagina ufficiale di Vinted! ⬇️</strong></p>
+                `,
+                contatti: {
+                    vintedUser: 'freri_sneakers_01'
+                },
+                foto: [
+                    'immagini/images7.jpeg', 
+                    'immagini/images6.jpeg', 
+                    'immagini/images5.jpeg',  
+                    'immagini/images8.jpeg' 
+                ]
+            },
+            {
+                id: 'Nike Air Max 97 - Total Black',
+                nome: '⚫ Nike Air Max 97 - Total Black ⚫',
+                descBreve: 'Un\'icona street-style che non può mancare nella tua collezione!',
+                descCompleta:`Le leggendarie Air Max 97 sono il simbolo dello stile retrò-futuristico, con le loro inconfondibili linee ondulate ispirate ai treni proiettile giapponesi. Questa colorazione è versatile, d'impatto e perfetta per l'uso quotidiano.
+                            La famosa tecnologia Air Max si estende per l'intera suola, offrendo una sensazione di passo morbido ed elastico. Garantisce un supporto insuperabile per affrontare la tua giornata in totale comodità.
+                <br><br>
+                <ul>
+                    <li>Taglia EU: 38.5</li>
+                    <li>Condizioni: Nuove, mai indossate</li>
+                </ul>
+                <hr>
+                
+                <h3>🛍️ COME ACQUISTARE (SOLO SU VINTED) 🛍️</h3>
+                <p>Per visualizzare tutti i dettagli, le foto aggiuntive e completare l'acquisto in modo sicuro:</p>
+                <p><strong>⬇️ Clicca sul pulsante qui sotto e visita la nostra pagina ufficiale di Vinted! ⬇️</strong></p>
+                `,
+                contatti: {
+                    vintedUser: 'freri_sneakers_01'
+                },
+                foto: [
+                    'immagini/images9.jpeg', 
+                    'immagini/images10.jpeg', 
+                    'immagini/images11.jpeg',  
+                    'immagini/images12.jpeg' 
+                ]
+            },
+            {
+                id: 'Nike Air Max Plus (TN)',
+                nome: '​⚡ Nike Air Max Plus (TN)⚡',
+                descBreve: 'L\'aggressività e il comfort della Tuned Air in una colorazione iconica!',
+                descCompleta: `Le leggendarie Nike Air Max Plus, conosciute come TN , sono un'icona di stile unica e aggressiva. Questa splendida combinazione di Bianco, Nero e Blu mette in risalto le inconfondibili linee che   conferiscono alla scarpa quel look dinamico e distintivo che l'ha resa leggendaria.
+                Il comfort è assicurato dalla tecnologia Tuned Air che divide l'aria in diverse camere, garantendo un'ammortizzazione reattiva e mirata che dura tutto il giorno ad ogni passo.
+                <br><br>
+                <ul>
+                    <li>Taglia EU: 38.5</li>
+                    <li>Condizioni: Nuove, mai indossate</li>
+                </ul>
+                <hr>
+                
+                <h3>🛍️ COME ACQUISTARE (SOLO SU VINTED) 🛍️</h3>
+                <p>Per visualizzare tutti i dettagli, le foto aggiuntive e completare l'acquisto in modo sicuro:</p>
+                <p><strong>⬇️ Clicca sul pulsante qui sotto e visita la nostra pagina ufficiale di Vinted! ⬇️</strong></p>
+                `,
+                contatti: {
+                    vintedUser: 'freri_sneakers_01'
+                },
+                foto: [
+                    'immagini/images14.jpeg', 
+                    'immagini/images13.jpeg', 
+                    'immagini/images15.jpeg',  
+                    'immagini/images16.jpeg' 
+                ]
+            },
+            {
+                id: 'airforce1-nera',
+                nome: 'Nike Air Max Plus (TN) - Energia Rosso Fuoco! 🔥',
+                descBreve: 'Preparati a dominare lo street style con queste TN irresistibili!',
+                descCompleta: `Il classico che non passa mai inosservato: queste Nike Air Max Plus 
+                sfoggiano una combinazione esplosiva di Bianco puro, dettagli Neri e accenti Rosso Fuoco sulla leggendaria gabbia. Un look audace, dinamico e inconfondibile, pensato per chi vuole farsi notare.
+                Comfort iconico Tuned Air per passi ammortizzati e uno stile inarrestabile.
+
+                <br><br>
+                <ul>
+                    <li>Taglia EU: 38</li>
+                    <li>Condizioni: Nuove, mai indossate</li>
+                </ul>
+                <hr>
+                
+                <h3>🛍️ COME ACQUISTARE (SOLO SU VINTED) 🛍️</h3>
+                <p>Per visualizzare tutti i dettagli, le foto aggiuntive e completare l'acquisto in modo sicuro:</p>
+                <p><strong>⬇️ Clicca sul pulsante qui sotto e visita la nostra pagina ufficiale di Vinted! ⬇️</strong></p>
+                `,
+                contatti: {
+                    vintedUser: 'freri_sneakers_01'
+                },
+                foto: [
+                    'immagini/images20.jpeg', 
+                    'immagini/images17.jpeg', 
+                    'immagini/images18.jpeg',  
+                    'immagini/images19.jpeg' 
+                ]
+            },
+            
+            {
+                id: 'NIKE AIR FORCE 1 ',
+                nome: 'NIKE AIR FORCE 1 ',
+                descBreve: ' L\'icona in rosa shock!💖',
+                descCompleta: `Un must-have assoluto per lo street-style, ora con un twist irresistibile. Queste AF1 Low Pelle bianca impeccabile, suola e iconico Swoosh in un Fucsia/Rosa acceso che fa girare la testa.
+                Il colore statement perfetto per dare energia ai tuoi outfit.
+
+
+                <br><br>
+                <ul>
+                    <li>Taglia EU: 38.5</li>
+                    <li>Condizioni: Nuove, mai indossate</li>
+                </ul>
+                <hr>
+                
+                <h3>🛍️ COME ACQUISTARE (SOLO SU VINTED) 🛍️</h3>
+                <p>Per visualizzare tutti i dettagli, le foto aggiuntive e completare l'acquisto in modo sicuro:</p>
+                <p><strong>⬇️ Clicca sul pulsante qui sotto e visita la nostra pagina ufficiale di Vinted! ⬇️</strong></p>
+                `,
+                contatti: {
+                    vintedUser: 'freri_sneakers_01'
+                },
+                foto: [
+                    'immagini/images21.jpeg', 
+                    'immagini/images22.jpeg', 
+                    'immagini/images23.jpeg',  
+                    'immagini/images24.jpeg' 
+                ]
+            },
+            {
+                id: 'Nike Air Force 1 Flyknit 2.0',
+                nome: 'Nike Air Force 1 Flyknit 2.0',
+                descBreve: 'Queste sono le iconiche Nike Air Force 1 reinventate con l\'innovativa tecnologia Flyknit.',
+                descCompleta:`Perfette per chi cerca il look classico AF1 senza rinunciare a un comfort e una leggerezza eccezionali. Il colore bianco puro le rende un must-have versatile per ogni stagione e outfit.
+
+
+                <br><br>
+                <ul>
+                    <li>Taglia EU: 38.5</li>
+                    <li>Condizioni: Nuove, mai indossate</li>
+                </ul>
+                <hr>
+                
+                <h3>🛍️ COME ACQUISTARE (SOLO SU VINTED) 🛍️</h3>
+                <p>Per visualizzare tutti i dettagli, le foto aggiuntive e completare l'acquisto in modo sicuro:</p>
+                <p><strong>⬇️ Clicca sul pulsante qui sotto e visita la nostra pagina ufficiale di Vinted! ⬇️</strong></p>
+                `,
+                contatti: {
+                    vintedUser: 'freri_sneakers_01'
+                },
+                foto: [
+                    'immagini/images25.jpeg', 
+                    'immagini/images26.jpeg', 
+                    'immagini/images27.jpeg',  
+                    'immagini/images28.jpeg' 
+                ]
+            },
+            {
+                id: 'Nike Field General',
+                nome: 'Nike Field General',
+                descBreve: 'Riscopri un classico! Le iconiche Nike Field General, ispirate agli anni \'80, tornano con un design autentico.',
+                descCompleta: `Questa versione presenta una tomaia robusta in tela beige con inserti in camoscio (suede) e lo Swoosh distintivo in marrone scuro. La suola in gomma naturale (Gum Sole) completa il look vintage perfetto. Un pezzo di storia Nike, ideale per un tocco old-school al tuo outfit!
+
+
+                <br><br>
+                <ul>
+                    <li>Taglia EU: 42</li>
+                    <li>Condizioni: Nuove, mai indossate</li>
+                </ul>
+                <hr>
+                
+                <h3>🛍️ COME ACQUISTARE (SOLO SU VINTED) 🛍️</h3>
+                <p>Per visualizzare tutti i dettagli, le foto aggiuntive e completare l'acquisto in modo sicuro:</p>
+                <p><strong>⬇️ Clicca sul pulsante qui sotto e visita la nostra pagina ufficiale di Vinted! ⬇️</strong></p>
+                `,
+                contatti: {
+                    vintedUser: 'freri_sneakers_01'
+                },
+                foto: [
+                    'immagini/images30.jpeg', 
+                    'immagini/images29.jpeg', 
+                    'immagini/images31.jpeg',  
+                    'immagini/images32.jpeg' 
+                ]
+            },
+            {
+                id: 'Nike Air Pegasus',
+                nome: ' Nike Air Pegasus',
+                descBreve: 'Direttamente dalla leggendaria serie Nike Air Pegasus!',
+                descCompleta: `Queste sneakers catturano l'estetica retro-running anni 2000 con una combinazione di mesh traspirante e strati sintetici in un'elegante colorazione bianco sporco/crema con dettagli neri audaci. Dotate di ammortizzazione "FULL LENGTH NIKE AIR" per un comfort superiore. Perfette per un look streetwear di tendenza o per la collezione di ogni appassionato.
+
+
+
+                <br><br>
+                <ul>
+                    <li>Taglia EU: 39</li>
+                    <li>Condizioni: Nuove, mai indossate</li>
+                </ul>
+                <hr>
+                
+                <h3>🛍️ COME ACQUISTARE (SOLO SU VINTED) 🛍️</h3>
+                <p>Per visualizzare tutti i dettagli, le foto aggiuntive e completare l'acquisto in modo sicuro:</p>
+                <p><strong>⬇️ Clicca sul pulsante qui sotto e visita la nostra pagina ufficiale di Vinted! ⬇️</strong></p>
+                `,
+                contatti: {
+                    vintedUser: 'freri_sneakers_01'
+                },
+                foto: [
+                    'immagini/images33.jpeg', 
+                    'immagini/images34.jpeg', 
+                    'immagini/images35.jpeg',  
+                    'immagini/images36.jpeg' 
+                ]
+            }
+        ];
+
+        let indiceFotoCorrente = 0; 
+
+        // Funzione che genera la vista del Catalogo (Home Page)
+        function generaCatalogo() {
+            let html = `
+                <div class="logo-container">
+                    <img src="immagini/logo.jpeg" alt="Logo FreriSneackers"> 
+                </div>
+                <h1>Le tue nuove sneakers ti aspettano! 👟</h1>
+                
+                <p class="descrizione-intro">Sei alla ricerca delle tue prossime sneakers? Sei nel posto giusto!
+                    Offriamo una selezione curata per ogni stile e necessità.
+                <hr>
+                <ul class="catalogo-griglia">
+            `;
+
+            prodotti.forEach(prodotto => {
+                html += `
+                    <li class="scheda-prodotto" onclick="mostraDettaglio('${prodotto.id}')">
+                        <img src="${prodotto.foto[0]}" alt="${prodotto.nome}" width="100%" height="auto">
+                        <h3>${prodotto.nome}</h3>
+                        <p>${prodotto.descBreve}</p>
+                        </li>
+                `;
+            });
+
+            html += `</ul>`;
+            document.getElementById('contenuto-principale').innerHTML = html;
+        }
+
+        // Funzione per generare e mostrare il Dettaglio Prodotto
+        function mostraDettaglio(prodottoId) {
+            const prodotto = prodotti.find(p => p.id === prodottoId);
+            if (!prodotto) return;
+
+            // Genera la galleria di immagini
+            let galleriaHtml = '';
+            prodotto.foto.forEach((src, index) => {
+                const classe = index === 0 ? 'active' : '';
+                galleriaHtml += `
+                    <div class="galleria-item ${classe}">
+                        <img src="${src}" alt="${prodotto.nome} - Foto ${index + 1}">
+                    </div>
+                `;
+            });
+            
+            // Inizializza l'indice della foto
+            indiceFotoCorrente = 0;
+
+            const vintedLink = `https://www.vinted.it/member/294615397-frerisneakers01${prodotto.contatti.vintedUser}`;
+
+            let html = `
+                <a href="#" onclick="generaCatalogo()" style="text-decoration: none; color: #333; font-size: 1.2em;">⬅ Torna al catalogo</a>
+                <div id="dettaglio-view">
+                    <h1>${prodotto.nome}</h1>
+                    
+                    <div class="dettaglio-flex">
+                        
+                        <div class="galleria-container">
+                            ${galleriaHtml}
+                            
+                            ${prodotto.foto.length > 1 ? `
+                                <button class="freccia freccia-prev" onclick="cambiaFoto(-1, '${prodottoId}')">❮</button>
+                                <button class="freccia freccia-next" onclick="cambiaFoto(1, '${prodottoId}')">❯</button>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="descrizione-contatti" style="width: 50%;">
+                            <p style="color: #333;">${prodotto.descCompleta}</p>
+                            
+                            
+                            <div class="pulsanti">
+                                <a href="${vintedLink}" target="_blank" class="btn-vinted" style="margin-top: 10px;">
+                                    🛒 Acquista su Vinted
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('contenuto-principale').innerHTML = html;
+        }
+
+        // Funzione per cambiare l'immagine nella galleria
+        function cambiaFoto(direzione, prodottoId) {
+            const prodotto = prodotti.find(p => p.id === prodottoId);
+            if (!prodotto) return;
+
+            const galleriaItems = document.querySelectorAll('.galleria-item');
+            if (galleriaItems.length === 0) return;
+
+            // Nasconde la foto corrente
+            galleriaItems[indiceFotoCorrente].classList.remove('active');
+
+            // Calcola il nuovo indice
+            indiceFotoCorrente += direzione;
+
+            // Gestisce il loop 
+            if (indiceFotoCorrente < 0) {
+                indiceFotoCorrente = galleriaItems.length - 1;
+            } else if (indiceFotoCorrente >= galleriaItems.length) {
+                indiceFotoCorrente = 0;
+            }
+
+            // Mostra la nuova foto
+            galleriaItems[indiceFotoCorrente].classList.add('active');
+        }
+
+        // Carica il catalogo all'avvio
+        window.onload = generaCatalogo;
+    </script>
+    
+    <footer style="text-align: center; margin-top: 50px; padding: 20px; font-size: 0.8em; color: #666; border-top: 1px solid #eee;">
+        <p>
+            FreriSneackers è un rivenditore indipendente di sneakers originali. 
+            Non siamo affiliati, approvati, autorizzati, sponsorizzati o in alcun modo ufficialmente collegati a Nike, Inc. o a nessuna delle sue consociate o affiliate. 
+            I nomi dei prodotti e i loghi citati sono marchi registrati dei rispettivi proprietari.
+        </p>
+    </footer>
+</body>
+</html>
